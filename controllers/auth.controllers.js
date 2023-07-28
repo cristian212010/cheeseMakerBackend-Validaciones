@@ -1,6 +1,7 @@
 const { response } = require('express');
 const Usuario = require('../models/Usuario.js');
 const bcryptjs = require('bcryptjs');
+const { generateJWT } = require('../helpers/generate.JWT.js');
 
 const login = async (req, res=response)=>{
     const {email, password} = req.body;
@@ -26,10 +27,13 @@ const login = async (req, res=response)=>{
             })
         }
 
-        //El usuario tenga un estado de activo
+        //Generacion para Validacion JSON WEB TOKEN
+        const token = await generateJWT(usuario.id);
         return res.json({
-            msg:"ok"
+            usuario,
+            token
         })
+        
     } catch (error) {
         res.json({
             msg:"Contacte al servicio tecnico"
